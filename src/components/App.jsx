@@ -2,10 +2,10 @@ import { Component } from "react";
 import api from "../http/http"
 import axios from "axios";
 
-
 import { SearchBar } from "./Searchbar/Searchbar.jsx"
 import { ImageGallery } from "./ImageGallery/ImageGallery.jsx"
 import { Button } from "./Button/Button";
+import { Oval } from  'react-loader-spinner'
 
 
 export class App extends Component {
@@ -17,17 +17,20 @@ export class App extends Component {
     currentPage: 1,
     perPage: 12,
     totalHits: 0,
+    loading: false,
   }
 
   
   async componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevState.query !== this.state.query) {
+      this.setState({loading: true})
       const result = await api.get(`?q=${this.state.query}&page=${this.state.currentPage}&key=${this.state.apiKey}&image_type=photo&orientation=horizontal&per_page=${this.state.perPage}`)
       console.log(result.data.hits)
 
       this.setState({
         imagesArray: result.data.hits,
-        totalHits: result.data.totalHits
+        totalHits: result.data.totalHits,
+        loading: false,
       })
       }
   }
@@ -68,10 +71,29 @@ export class App extends Component {
         <SearchBar
           onSubmit={this.onSubmit}
         />
-        <ImageGallery
-          imagesArray={this.state.imagesArray}
-        />
-        {
+         {this.state.loading ? (
+          <div style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            }}>
+            <Oval
+              wrapperClass="loader"
+              ariaLabel="loading-indicator"
+              height={100}
+              width={100}
+              strokeWidth={5}
+              strokeWidthSecondary={5}
+              color="#000fff"
+              secondaryColor="#ffff00"
+            />
+          </div>
+          ) : (
+          <ImageGallery imagesArray={this.state.imagesArray} />
+        )}
+        { this.state.loading === false &&
+          imagesArray.length !== 0 &&
           imagesArray.length < totalHits &&
             <Button
               handleLoadMore={this.handleLoadMore}
