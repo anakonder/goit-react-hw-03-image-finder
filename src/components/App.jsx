@@ -5,7 +5,8 @@ import axios from "axios";
 import { SearchBar } from "./Searchbar/Searchbar.jsx"
 import { ImageGallery } from "./ImageGallery/ImageGallery.jsx"
 import { Button } from "./Button/Button";
-import { Oval } from  'react-loader-spinner'
+import { Oval } from 'react-loader-spinner'
+import { Modal } from "./Modal/Modal";
 
 
 export class App extends Component {
@@ -18,6 +19,8 @@ export class App extends Component {
     perPage: 12,
     totalHits: 0,
     loading: false,
+    isModalOpen: false,
+    largeImageURL: ""
   }
 
   
@@ -25,7 +28,7 @@ export class App extends Component {
     if (prevState.query !== this.state.query) {
       this.setState({loading: true})
       const result = await api.get(`?q=${this.state.query}&page=${this.state.currentPage}&key=${this.state.apiKey}&image_type=photo&orientation=horizontal&per_page=${this.state.perPage}`)
-      console.log(result.data.hits)
+      console.log(result.data.hits)//Delate
 
       this.setState({
         imagesArray: result.data.hits,
@@ -61,7 +64,16 @@ export class App extends Component {
       (prevState) => ({ currentPage: prevState.currentPage + 1 }),
       () => this.fetchImages()
     );
-  };a
+  };
+
+  modalOpen = (largeImg) => {
+    console.log("Я клікнув по картинці");//Delate
+    this.setState({ largeImageURL: largeImg, isModalOpen: true });
+  };
+
+  modalClose = () => {
+    this.setState({isModalOpen: false})
+  }
 
   
   render() {
@@ -90,7 +102,10 @@ export class App extends Component {
             />
           </div>
           ) : (
-          <ImageGallery imagesArray={this.state.imagesArray} />
+            <ImageGallery
+              imagesArray={this.state.imagesArray}
+              modalOpen={this.modalOpen}
+            />
         )}
         { this.state.loading === false &&
           imagesArray.length !== 0 &&
@@ -99,6 +114,12 @@ export class App extends Component {
               handleLoadMore={this.handleLoadMore}
             />          
         }
+        {this.state.isModalOpen && (
+          <Modal
+            modalClose={this.modalClose}
+           largeImageURL={this.state.largeImageURL}
+         />
+        )}
       </div>
     );    
   }
