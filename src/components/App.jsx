@@ -28,14 +28,22 @@ export class App extends Component {
     if (prevState.query !== this.state.query) {
       this.setState({loading: true})
       const result = await api.get(`?q=${this.state.query}&page=${this.state.currentPage}&key=${this.state.apiKey}&image_type=photo&orientation=horizontal&per_page=${this.state.perPage}`)
-      console.log(result.data.hits)//Delate
+      // console.log(result.data.hits)//Delate
 
       this.setState({
         imagesArray: result.data.hits,
         totalHits: result.data.totalHits,
         loading: false,
       })
-      }
+    }
+    {
+    const { isModalOpen } = this.state;
+    if (isModalOpen && prevState.isModalOpen !== isModalOpen) {
+      document.addEventListener("keydown", this.handleKeyPress);
+    } else if (!isModalOpen && prevState.isModalOpen !== isModalOpen) {
+      document.removeEventListener("keydown", this.handleKeyPress);
+    }
+    }
   }
   
   
@@ -67,13 +75,21 @@ export class App extends Component {
   };
 
   modalOpen = (largeImg) => {
-    console.log("Я клікнув по картинці");//Delate
+    // console.log("Я клікнув по картинці");//Delate
     this.setState({ largeImageURL: largeImg, isModalOpen: true });
   };
 
   modalClose = () => {
     this.setState({isModalOpen: false})
   }
+
+  
+
+  handleKeyPress = (event) => {
+    if (event.key === "Escape") {
+      this.modalClose();
+    }
+  };
 
   
   render() {
