@@ -21,7 +21,6 @@ export const ImageGallery = ({ imagesArray, modalOpen }) => {
 
 
 ImageGallery.propTypes = {
-  key: PropTypes.string.isRequired,
   card: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired
 }
