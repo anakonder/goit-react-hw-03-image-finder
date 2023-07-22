@@ -57,6 +57,10 @@ export class App extends Component {
   modalOpen = (largeImg) => {
     this.setState({ largeImageURL: largeImg, isModalOpen: true });
   };
+
+  modalClose = () => {
+    this.setState({ isModalOpen: false });
+  };
   
   render() {
     const { imagesArray, totalHits } = this.state;
@@ -99,7 +103,7 @@ export class App extends Component {
         {this.state.isModalOpen && (
           <Modal
             modalClose={this.modalClose}
-           largeImageURL={this.state.largeImageURL}
+            largeImageURL={this.state.largeImageURL}
          />
         )}
       </div>

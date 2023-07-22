@@ -3,14 +3,12 @@ import PropTypes from "prop-types";
 import { Component } from "react";
 
 export class Modal extends Component {
-  modalClose = () => {
-    this.setState({ isModalOpen: false });
-    document.removeEventListener("keydown", this.handleKeyPress);
-  };
+
+  
 
   handleKeyPress = (event) => {
     if (event.key === "Escape") {
-      this.modalClose();
+      this.props.modalClose();
     }
   };
 
@@ -25,7 +23,7 @@ export class Modal extends Component {
   render() {
     const { largeImageURL } = this.props;
     return (
-      <div className={styles.Overlay} onClick={this.modalClose}>
+      <div className={styles.Overlay} onClick={this.props.modalClose}>
         <div className={styles.Modal}>
           <img src={largeImageURL} alt="" />
         </div>
