@@ -24,7 +24,7 @@ export class App extends Component {
 
   
   async componentDidUpdate(prevProps, prevState) {
-    if (prevState.query !== this.state.query) {
+    if (prevState.query !== this.state.query || prevState.currentPage !== this.state.currentPage) {
       this.setState({ loading: true });
       const result = await getImages(this.state.query, this.state.currentPage, this.state.perPage);
       console.log(result)
