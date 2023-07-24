@@ -5,8 +5,8 @@ import { getImages } from "../API/API"
 import { SearchBar } from "./Searchbar/Searchbar.jsx"
 import { ImageGallery } from "./ImageGallery/ImageGallery.jsx"
 import { Button } from "./Button/Button";
-import { Oval } from 'react-loader-spinner'
 import { Modal } from "./Modal/Modal";
+import { Loader } from "./Loader/Loader";
 
 
 export class App extends Component {
@@ -45,7 +45,7 @@ export class App extends Component {
   
   onSubmit = (state) => {
       console.log(state);
-      this.setState({ query: state, currentPage: 1 });
+      this.setState({ query: state, currentPage: 1, imagesArray: [] });
   }
   
   handleLoadMore = () => {
@@ -69,30 +69,14 @@ export class App extends Component {
         <SearchBar
           onSubmit={this.onSubmit}
         />
-         {this.state.loading ? (
-          <div style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-            }}>
-            <Oval
-              wrapperClass="loader"
-              ariaLabel="loading-indicator"
-              height={100}
-              width={100}
-              strokeWidth={5}
-              strokeWidthSecondary={5}
-              color="#000fff"
-              secondaryColor="#ffff00"
-            />
-          </div>
-          ) : (
-            <ImageGallery
-              imagesArray={this.state.imagesArray}
-              modalOpen={this.modalOpen}
-            />
-        )}
+        {this.state.loading && (
+          <Loader/>          
+        )} 
+        <ImageGallery
+          imagesArray={this.state.imagesArray}
+          modalOpen={this.modalOpen}
+        />
+        
         { this.state.loading === false &&
           imagesArray.length !== 0 &&
           imagesArray.length < totalHits &&
